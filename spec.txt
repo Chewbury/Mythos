@@ -1,0 +1,30 @@
+Player Statistics
+
+
+
+HP (0-100) - Health points remaining
+
+SP (0-100) - Spirit points remaining
+
+SAN (0-100) - Sanity remaining
+
+NRG (0-100) - Energy remaining
+
+LVL (0-100) - player level
+
+XP  ((aaa of bbb) current level dependant) - experience in the current level
+
+
+
+
+
+
+Town generation:
+
+	
+1. Generate grass over whole area, bordered by inpenetrable 'miasma'.
+	
+2. Augment this with patches of longer grass and bare dirt.
+	
+3. Generate groups of trees.
+
