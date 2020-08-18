@@ -94,7 +94,18 @@ int generate(void){
 // WATER
 //
 // Place some water around
-  
+for(x=0;x<MAXCOLS;x++){
+  for(y=0;y<MAXROWS;y++){
+    r=rand()&16383;
+    if(r < 2){
+      world[x][y]=DEEP_WATER;
+      c++;
+    }
+  }
+}
+printf("done. Seeded %d patches of deep water.\n",c);
+// Grow deep water
+// Add shallow water
 
 
   printf("Drawing a square in the top left for debugging\n");

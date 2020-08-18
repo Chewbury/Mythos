@@ -1,6 +1,12 @@
 #define MAXROWS 1024
 #define MAXCOLS 1024
 
+// COLOURS
+#define RED 1
+#define GREEN 2
+#define CYAN 3
+#define WHITE 4
+#define BLUE 5
 
 // Objects
 #define PLAIN_GRASS 1

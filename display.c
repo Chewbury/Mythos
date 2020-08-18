@@ -17,7 +17,7 @@ int drawHUD(void){
 
   // Doing the whole HUD in red bold
   attron(A_BOLD);
-  attron(COLOR_PAIR(1)); // Red on black
+  attron(COLOR_PAIR(RED)); // Red on black
   // Draw boundary round screen
   mvaddch(0,0,ACS_ULCORNER); // Top left corner
   for(i=1;i<numCols-1;i++){  // Horizontal line from...
@@ -25,14 +25,14 @@ int drawHUD(void){
     mvaddch(numRows-1,i,ACS_HLINE); // ... and bottom left to bottom right
   }
   mvaddch(0,numCols-1,ACS_URCORNER); // Then add upper right corner
-  
+
   mvaddch(numRows-1,0,ACS_LLCORNER); // Lower left corner
   for(i=1;i<numRows-1;i++){          // Vertical lines from....
     mvaddch(i,0,ACS_VLINE);          // Top left to bottom left and...
     mvaddch(i,numCols-1,ACS_VLINE);  // Top right to bottom right
   }
   mvaddch(numRows-1,numCols-1,ACS_LRCORNER); // Lower right corner
-  
+
   // Draw player Status are - needs to be 10 cols x 7 rows
   // Need a top tee at numCols - 11
   mvaddch(0,numCols-11,ACS_TTEE);
@@ -59,10 +59,10 @@ int drawHUD(void){
   mvaddch(numRows-3,numCols-1,ACS_RTEE);
 
   attroff(A_BOLD);
-  attroff(COLOR_PAIR(1));
+  attroff(COLOR_PAIR(RED));
 
   // Let's add some status text
-  attron(COLOR_PAIR(2)); // Green on Black
+  attron(COLOR_PAIR(GREEN)); // Green on Black
   attron(A_BOLD);
   mvprintw(numRows-2, numCols-1-(strlen(relname)),relname);
   attroff(A_BOLD);
@@ -72,7 +72,7 @@ int drawHUD(void){
 
   // And the player status text
   attron(A_BOLD);
-  attron(COLOR_PAIR(3)); // Cyan on Black
+  attron(COLOR_PAIR(CYAN)); // Cyan on Black
   mvprintw(1,numCols-10,"HP");
   mvprintw(2,numCols-10,"SP");
   mvprintw(3,numCols-10,"SAN");
@@ -85,7 +85,7 @@ int drawHUD(void){
   attroff(COLOR_PAIR(3));
 
   // now fill in the stats
-  attron(COLOR_PAIR(4)); // White on black
+  attron(COLOR_PAIR(WHITE)); // White on black
   mvprintw(1,numCols-4,"%d",player.HP);
   mvprintw(2,numCols-4,"%d",player.SP);
   mvprintw(3,numCols-4,"%d",player.SAN);
@@ -105,53 +105,65 @@ int drawDisplay(void){
   int tx,ty,r;
   x=0;
   y=0;
-  
+
   xOffset=screenCols/2;
   yOffset=screenRows/2;
 
   for(x=1;x<screenCols;x++){
     for(y=1;y<screenRows;y++){
- 
+
      tx=player.x-xOffset+x;
      ty=player.y-yOffset+y;
-      
+
       if(tx<0 || tx>MAXCOLS-1||ty<0||ty>MAXROWS-1){
-	attron(COLOR_PAIR(4));
+	attron(COLOR_PAIR(WHITE));
 	mvaddch(y,x,ACS_CKBOARD);
-	attroff(COLOR_PAIR(4));
+	attroff(COLOR_PAIR(WHITE));
       }
       else
 	{
 	  switch(world[tx][ty]){
 
 	  case PLAIN_GRASS:
-	    attron(COLOR_PAIR(2));
+	    attron(COLOR_PAIR(GREEN));
 	    attron(A_BOLD);
 	    mvprintw(y,x,".");
-	    attroff(COLOR_PAIR(2));
+	    attroff(COLOR_PAIR(GREEN));
 	    attroff(A_BOLD);
 	    break;
-	    
+
 	  case LONG_GRASS:
-	    attron(COLOR_PAIR(2));
+	    attron(COLOR_PAIR(GREEN));
 	    mvprintw(y,x,",");
-	    attroff(COLOR_PAIR(2));
+	    attroff(COLOR_PAIR(GREEN));
 	    break;
-	    
-	  case TREE:
-	    attron(COLOR_PAIR(1));
+
+    case TREE:
+	    attron(COLOR_PAIR(RED));
 	    mvprintw(y,x,"X");
-	    attroff(COLOR_PAIR(1));
+	    attroff(COLOR_PAIR(RED));
 	    break;
-	    
+
+    case SHALLOW_WATER:
+	    attron(COLOR_PAIR(CYAN));
+	    mvaddch(y,x,ACS_CKBOARD);
+	    attroff(COLOR_PAIR(CYAN));
+	    break;
+
+    case DEEP_WATER:
+	    attron(COLOR_PAIR(BLUE));
+	    mvaddch(y,x,ACS_CKBOARD);
+	    attroff(COLOR_PAIR(BLUE));
+	    break;
+
 	  }
 	if(tx==player.x && ty==player.y){
 	  // Draw the player
-	  attron(COLOR_PAIR(4));
+	  attron(COLOR_PAIR(WHITE));
 	  attron(A_BOLD);
 	  mvprintw(y,x,"@");
 	  attroff(A_BOLD);
-	  attroff(COLOR_PAIR(4));
+	  attroff(COLOR_PAIR(WHITE));
 	  switch (world[tx][ty]){
 	  case PLAIN_GRASS:
 	    mvprintw(numRows-2,2,"Short grass     ");
@@ -162,6 +174,12 @@ int drawDisplay(void){
 	  case TREE:
 	    mvprintw(numRows-2,2,"Gnarled tree    ");
 	    break;
+    case SHALLOW_WATER:
+  	    mvprintw(numRows-2,2,"Shallow water    ");
+  	    break;
+        case DEEP_WATER:
+    	    mvprintw(numRows-2,2,"Deep water    ");
+    	    break;
 	  }
 	}
       }
