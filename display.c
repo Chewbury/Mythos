@@ -13,7 +13,7 @@ extern int world[MAXCOLS][MAXROWS];
 int drawHUD(void){
 
   int i,x,y;
-  char relname[]="Mythos v0.1";
+  char relname[]="Mythos v0.11";
 
   // Doing the whole HUD in red bold
   attron(A_BOLD);

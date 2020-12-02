@@ -5,15 +5,15 @@
 extern int world[MAXCOLS][MAXROWS];
 
 int generate(void){
-
-  int x,y,r,c;
-
+  
+  int x,y,r,c,pass;
+  
   printf("Generating the world....\n");
-
-//
-// GRASS
-//
-// First set everything to plain old grass
+  
+  //
+  // GRASS
+  //
+  // First set everything to plain old grass
   printf("Planting grass...");
   c=0;
   for(x=0;x<MAXCOLS;x++){
@@ -55,11 +55,11 @@ int generate(void){
     }
   }
   printf("done. %d new patches of long grass\n",c);
-
-//
-// TREES
-//
-// Plant some trees
+  
+  //
+  // TREES
+  //
+  // Plant some trees
   printf("Planting trees...");
   c=0;
   for(x=0;x<MAXCOLS;x++){
@@ -89,25 +89,94 @@ int generate(void){
       }
     }
   }
-
-//
-// WATER
-//
-// Place some water around
-for(x=0;x<MAXCOLS;x++){
-  for(y=0;y<MAXROWS;y++){
-    r=rand()&16383;
-    if(r < 2){
-      world[x][y]=DEEP_WATER;
-      c++;
+  printf("done.\n");
+  //
+  // WATER
+  //
+  // Place some water around
+  printf("Seeding deep water...");
+  c=0;
+  for(x=0;x<MAXCOLS;x++){
+    for(y=0;y<MAXROWS;y++){
+      r=rand()&16383;
+      if(r < 2){
+	world[x][y]=DEEP_WATER;
+	c++;
+      }
     }
   }
-}
-printf("done. Seeded %d patches of deep water.\n",c);
-// Grow deep water
-// Add shallow water
+  printf("done. Seeded %d patches of deep water.\n",c);
 
+  // Grow deep water
+  printf("Growing deep water pass: ");
+  pass=0;
+  while(pass < 10){
+    for(x=0;x<MAXCOLS;x++){
+      for(y=0;y<MAXROWS;y++){
+	if(world[x][y]==DEEP_WATER){
+	  // Found a spot of deep water. It's likely there'll be more deep water around it - 50% chance. 25% chance
+	  // Vertically as the generator is running in that direction. Ten passes over the map
+	  r=rand()&7;
+	  if(r < 4){
+	    if(x>0){
+	      world[x-1][y]=DEEP_WATER;
+	    }
+	  }
+	  r=rand()&7;
+	  if(r < 3){
+	    if(y>0){
+	      world[x][y-1]=DEEP_WATER;
+	    }
+	  }
+	  r=rand()&7;
+	  if(r < 4){
+	    if(x < MAXCOLS){
+	      world[x+1][y]=DEEP_WATER;
+	    }
+	  }
+	  r=rand()&7;
+	  if(r < 3){
+	    if(y<MAXROWS){
+	      world[x][y+1]=DEEP_WATER;
+	    }
+	  }
+	}
+      }
+    }
+    printf("%d...",pass);
+    pass++;
+  }
+  printf("done.\n");
+  // Add shallow water
+  // If the deep water has grass beside it, make the grass shallow water
+  for(x=0; x<MAXCOLS; x++){
+    for(y=0; y<MAXROWS; y++){
+      if(world[x][y] == DEEP_WATER || world[x][y] == SHALLOW_WATER) {
+	if(x>0){
+	if(world[x-1][y] != DEEP_WATER){
+	  world[x-1][y] = SHALLOW_WATER;
+	  }
+	}
+	if (x<MAXCOLS){
+	  if(world[x+1][y] != DEEP_WATER){
+	    world[x+1][y] = SHALLOW_WATER;
+	  }
+	}
+	if(y>0){
+	  if(world[x][y-1] != DEEP_WATER){
+	    world[x][y-1] = SHALLOW_WATER;
+	  }
+	}
+	if (y<MAXROWS){
+	  if(world[x][y+1] != DEEP_WATER){
+	    world[x][y+1] = SHALLOW_WATER;
+	  }
+	}
+      }
+    }
+  }
 
+  
   printf("Drawing a square in the top left for debugging\n");
   world[1][1]=TREE;
   world[1][2]=TREE;
