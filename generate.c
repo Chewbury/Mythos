@@ -130,13 +130,13 @@ int generate(void){
 	  }
 	  r=rand()&7;
 	  if(r < 4){
-	    if(x < MAXCOLS){
+	    if(x < MAXCOLS-1){
 	      world[x+1][y]=DEEP_WATER;
 	    }
 	  }
 	  r=rand()&7;
 	  if(r < 3){
-	    if(y<MAXROWS){
+	    if(y<MAXROWS-1){
 	      world[x][y+1]=DEEP_WATER;
 	    }
 	  }
@@ -151,13 +151,13 @@ int generate(void){
   // If the deep water has grass beside it, make the grass shallow water
   for(x=0; x<MAXCOLS; x++){
     for(y=0; y<MAXROWS; y++){
-      if(world[x][y] == DEEP_WATER || world[x][y] == SHALLOW_WATER) {
+      if(world[x][y] == DEEP_WATER) {
 	if(x>0){
-	if(world[x-1][y] != DEEP_WATER){
-	  world[x-1][y] = SHALLOW_WATER;
+	  if(world[x-1][y] != DEEP_WATER){
+	    world[x-1][y] = SHALLOW_WATER;
 	  }
 	}
-	if (x<MAXCOLS){
+	if (x<MAXCOLS-1){
 	  if(world[x+1][y] != DEEP_WATER){
 	    world[x+1][y] = SHALLOW_WATER;
 	  }
@@ -167,7 +167,7 @@ int generate(void){
 	    world[x][y-1] = SHALLOW_WATER;
 	  }
 	}
-	if (y<MAXROWS){
+	if (y<MAXROWS-1){
 	  if(world[x][y+1] != DEEP_WATER){
 	    world[x][y+1] = SHALLOW_WATER;
 	  }
